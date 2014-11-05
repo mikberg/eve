@@ -449,8 +449,8 @@ uppercase.
                                     want clients to be able to POST/PATCH it.
                                     Defaults to ``True``. 
 
-``OPLOG``                           Set it to ``False`` to disable the :ref:`oplog`.
-                                    Defaults to ``True``.
+``OPLOG``                           Set it to ``True`` to enable the :ref:`oplog`.
+                                    Defaults to ``False``.
 
 ``OPLOG_NAME``                      This is the name of the database collection 
                                     where the :ref:`oplog` is stored. Defaults
@@ -458,7 +458,8 @@ uppercase.
 
 ``OPLOG_METHODS``                   List of HTTP methods which operations 
                                     should be logged in the :ref:`oplog`.
-                                    Defaults to ``['DELETE']``.
+                                    Defaults to ``['DELETE', 'POST, 'PATCH',
+                                    'PUT']``.
 
 ``OPLOG_ENDPOINT``                  Name of the :ref:`oplog` endpoint. If the 
                                     endpoint is enabled it can be configured
