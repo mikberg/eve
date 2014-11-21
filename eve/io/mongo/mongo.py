@@ -43,7 +43,8 @@ class MongoJSONEncoder(BaseJSONEncoder):
 class Mongo(DataLayer):
     """ MongoDB data access layer for Eve REST API.
 
-    .. versionchanged:
+    .. versionchanged:: 0.5
+       Properly serialize nullable float and integers. #469.
        Return 400 if unsupported query operators are used. #387.
 
     .. versionchanged:: 0.4
@@ -59,8 +60,8 @@ class Mongo(DataLayer):
     serializers = {
         'objectid': lambda value: ObjectId(value) if value else None,
         'datetime': str_to_date,
-        'integer': int,
-        'float': float,
+        'integer': lambda value: int(value) if value else None,
+        'float': lambda value: float(value) if value else None,
     }
 
     # JSON serializer is a class attribute. Allows extensions to replace it
@@ -621,7 +622,12 @@ class Mongo(DataLayer):
                         # 12-character strings (but not unicode) as binary
                         # representations of ObjectId's.  See
                         # https://github.com/nicolaiarocci/eve/issues/508
-                        return ObjectId(unicode(v))
+                        try:
+                            r = ObjectId(unicode(v))
+                        except NameError:
+                            # We're on Python 3 so it's all unicode # already.
+                            r = ObjectId(v)
+                        return r
                     except:
                         return v
                 else:
